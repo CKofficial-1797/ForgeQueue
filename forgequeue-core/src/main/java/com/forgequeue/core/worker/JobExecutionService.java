@@ -15,11 +15,14 @@ public class JobExecutionService {
 
     private final JobExecutorRegistry registry;
     private final JobRepository jobRepository;
+    private final WorkerProperties properties;
 
     public JobExecutionService(JobExecutorRegistry registry,
-                               JobRepository jobRepository) {
+                               JobRepository jobRepository,
+                               WorkerProperties properties) {
         this.registry = registry;
         this.jobRepository = jobRepository;
+        this.properties = properties;
     }
 
     public void execute(Job job) {
@@ -36,7 +39,10 @@ public class JobExecutionService {
             markCompleted(job);
 
         } catch (Exception ex) {
+
             System.out.println("Execution failed for job " + job.getId() + ": " + ex.getMessage());
+
+            handleFailure(job);
         }
     }
 
@@ -45,6 +51,33 @@ public class JobExecutionService {
 
         job.setStatus(JobStatus.COMPLETED);
         job.setCompletedAt(Instant.now());
+        job.setLeaseExpiresAt(null);
+        job.setWorkerId(null);
+
+        jobRepository.save(job);
+    }
+
+    @Transactional
+    protected void handleFailure(Job job) {
+
+        if (job.getAttemptCount() >= job.getMaxAttempts()) {
+
+            job.setStatus(JobStatus.DEAD_LETTER);
+            job.setFailedAt(Instant.now());
+            job.setLeaseExpiresAt(null);
+            job.setWorkerId(null);
+
+            jobRepository.save(job);
+            return;
+        }
+
+        long base = properties.getRetryBaseDelaySeconds();
+        long delaySeconds = base * (1L << (job.getAttemptCount() - 1));
+
+        Instant nextRun = Instant.now().plusSeconds(delaySeconds);
+
+        job.setStatus(JobStatus.QUEUED);
+        job.setNextRunAt(nextRun);
         job.setLeaseExpiresAt(null);
         job.setWorkerId(null);
 

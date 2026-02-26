@@ -11,6 +11,7 @@ public class WorkerProperties {
     private int batchSize;
     private long visibilityTimeoutSeconds;
     private long pollIntervalMs;
+    private long retryBaseDelaySeconds;
 
     public boolean isEnabled() {
         return enabled;
@@ -43,4 +44,12 @@ public class WorkerProperties {
     public void setPollIntervalMs(long pollIntervalMs) {
         this.pollIntervalMs = pollIntervalMs;
     }
+
+    public long getRetryBaseDelaySeconds() {
+    return retryBaseDelaySeconds;
+}
+
+public void setRetryBaseDelaySeconds(long retryBaseDelaySeconds) {
+    this.retryBaseDelaySeconds = retryBaseDelaySeconds;
+}
 }
