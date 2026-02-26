@@ -11,6 +11,10 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+import java.util.Optional;
+
+Optional<Job> findByUserIdAndIdempotencyKey(String userId, String idempotencyKey);
+
 @Repository
 public interface JobRepository extends JpaRepository<Job, UUID> {
 
