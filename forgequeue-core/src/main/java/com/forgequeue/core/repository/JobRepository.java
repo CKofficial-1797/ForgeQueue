@@ -28,4 +28,18 @@ public interface JobRepository extends JpaRepository<Job, UUID> {
             @Param("now") Instant now,
             @Param("limit") int limit
     );
+
+    @Query(value = """
+        SELECT *
+        FROM jobs
+        WHERE (
+            (status = 'QUEUED' AND next_run_at <= now())
+            OR
+            (status = 'PROCESSING' AND lease_expires_at <= now())
+        )
+        ORDER BY priority DESC, next_run_at ASC
+        LIMIT :limit
+        FOR UPDATE SKIP LOCKED
+        """, nativeQuery = true)
+List<Job> leaseCandidates(@Param("limit") int limit);
 }
