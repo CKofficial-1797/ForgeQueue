@@ -13,6 +13,9 @@ public class WorkerProperties {
     private long pollIntervalMs;
     private long retryBaseDelaySeconds;
 
+    private long retryMaxDelaySeconds;
+    private double retryJitterFactor;
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -46,10 +49,26 @@ public class WorkerProperties {
     }
 
     public long getRetryBaseDelaySeconds() {
-    return retryBaseDelaySeconds;
-}
+        return retryBaseDelaySeconds;
+    }
 
-public void setRetryBaseDelaySeconds(long retryBaseDelaySeconds) {
-    this.retryBaseDelaySeconds = retryBaseDelaySeconds;
-}
+    public void setRetryBaseDelaySeconds(long retryBaseDelaySeconds) {
+        this.retryBaseDelaySeconds = retryBaseDelaySeconds;
+    }
+
+    public long getRetryMaxDelaySeconds() {
+        return retryMaxDelaySeconds;
+    }
+
+    public void setRetryMaxDelaySeconds(long retryMaxDelaySeconds) {
+        this.retryMaxDelaySeconds = retryMaxDelaySeconds;
+    }
+
+    public double getRetryJitterFactor() {
+        return retryJitterFactor;
+    }
+
+    public void setRetryJitterFactor(double retryJitterFactor) {
+        this.retryJitterFactor = retryJitterFactor;
+    }
 }

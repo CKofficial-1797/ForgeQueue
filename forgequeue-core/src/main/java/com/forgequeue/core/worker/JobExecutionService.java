@@ -81,9 +81,26 @@ public class JobExecutionService {
         }
 
         long base = properties.getRetryBaseDelaySeconds();
-        long delaySeconds = base * (1L << (job.getAttemptCount() - 1));
+        long maxDelay = properties.getRetryMaxDelaySeconds();
+        double jitterFactor = properties.getRetryJitterFactor();
 
-        Instant nextRun = Instant.now().plusSeconds(delaySeconds);
+        long rawDelay = base * (1L << (job.getAttemptCount() - 1));
+
+        // Cap delay
+        long cappedDelay = Math.min(rawDelay, maxDelay);
+
+        // jitter (± jitterFactor)
+        long jitterRange = (long) (cappedDelay * jitterFactor);
+        long randomJitter = (long) ((Math.random() * (2 * jitterRange)) - jitterRange);
+
+        long finalDelay = cappedDelay + randomJitter;
+
+        // Safety floor
+        if (finalDelay < 1) {
+            finalDelay = 1;
+        }
+
+        Instant nextRun = Instant.now().plusSeconds(finalDelay);
 
         job.setStatus(JobStatus.QUEUED);
         job.setNextRunAt(nextRun);
@@ -99,3 +116,4 @@ public class JobExecutionService {
         return sw.toString();
     }
 }
+
