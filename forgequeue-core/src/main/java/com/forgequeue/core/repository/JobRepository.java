@@ -33,9 +33,16 @@ public interface JobRepository extends JpaRepository<Job, UUID> {
         SELECT *
         FROM jobs
         WHERE (
-            (status = 'QUEUED' AND next_run_at <= now())
-            OR
-            (status = 'PROCESSING' AND lease_expires_at <= now())
+            (
+                status = 'QUEUED'
+                AND next_run_at <= now()
+                AND attempt_count < max_attempts
+            )
+         OR (
+                status = 'PROCESSING'
+                AND lease_expires_at <= now()
+                AND attempt_count < max_attempts
+            )
         )
         ORDER BY priority DESC, next_run_at ASC
         LIMIT :limit
