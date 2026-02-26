@@ -16,16 +16,14 @@ public class EmailJobExecutor implements JobExecutor {
     }
 
     @Override
-    public void execute(Job job) throws Exception {
+    public String execute(Job job) throws Exception {
 
-        // Simulate processing time
         Thread.sleep(500);
 
-        // Simulate random failure (30%)
         if (random.nextInt(10) < 3) {
             throw new RuntimeException("Simulated email sending failure");
         }
 
-        System.out.println("Email job executed successfully: " + job.getId());
+        return "{\"status\":\"SENT\",\"jobId\":\"" + job.getId() + "\"}";
     }
 }

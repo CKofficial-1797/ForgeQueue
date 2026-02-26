@@ -8,6 +8,8 @@ import com.forgequeue.core.repository.JobRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.Instant;
 
 @Service
@@ -34,31 +36,38 @@ public class JobExecutionService {
                 throw new IllegalStateException("No executor found for type: " + job.getType());
             }
 
-            executor.execute(job);
+            String result = executor.execute(job);
 
-            markCompleted(job);
+            markCompleted(job, result);
 
         } catch (Exception ex) {
 
-            System.out.println("Execution failed for job " + job.getId() + ": " + ex.getMessage());
-
-            handleFailure(job);
+            handleFailure(job, ex);
         }
     }
 
     @Transactional
-    protected void markCompleted(Job job) {
+    protected void markCompleted(Job job, String resultPayload) {
 
         job.setStatus(JobStatus.COMPLETED);
         job.setCompletedAt(Instant.now());
         job.setLeaseExpiresAt(null);
         job.setWorkerId(null);
+        job.setResultPayload(resultPayload);
+        job.setLastErrorMessage(null);
+        job.setLastErrorStacktrace(null);
 
         jobRepository.save(job);
     }
 
     @Transactional
-    protected void handleFailure(Job job) {
+    protected void handleFailure(Job job, Exception ex) {
+
+        String errorMessage = ex.getMessage();
+        String stackTrace = getStackTrace(ex);
+
+        job.setLastErrorMessage(errorMessage);
+        job.setLastErrorStacktrace(stackTrace);
 
         if (job.getAttemptCount() >= job.getMaxAttempts()) {
 
@@ -82,5 +91,11 @@ public class JobExecutionService {
         job.setWorkerId(null);
 
         jobRepository.save(job);
+    }
+
+    private String getStackTrace(Exception ex) {
+        StringWriter sw = new StringWriter();
+        ex.printStackTrace(new PrintWriter(sw));
+        return sw.toString();
     }
 }

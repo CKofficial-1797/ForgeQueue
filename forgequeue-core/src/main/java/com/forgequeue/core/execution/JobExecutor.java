@@ -6,5 +6,5 @@ public interface JobExecutor {
 
     String getType();
 
-    void execute(Job job) throws Exception;
+   String execute(Job job) throws Exception;
 }
