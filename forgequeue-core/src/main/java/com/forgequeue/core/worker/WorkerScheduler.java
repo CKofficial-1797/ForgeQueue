@@ -11,11 +11,14 @@ public class WorkerScheduler {
 
     private final WorkerProperties properties;
     private final JobLeasingService leasingService;
+    private final JobExecutionService executionService;
 
     public WorkerScheduler(WorkerProperties properties,
-                           JobLeasingService leasingService) {
+                           JobLeasingService leasingService,
+                           JobExecutionService executionService) {
         this.properties = properties;
         this.leasingService = leasingService;
+        this.executionService = executionService;
     }
 
     @Scheduled(fixedDelayString = "${forgequeue.worker.poll-interval-ms}")
@@ -27,8 +30,16 @@ public class WorkerScheduler {
 
         List<Job> jobs = leasingService.leaseBatch();
 
-        if (!jobs.isEmpty()) {
-            System.out.println("Leased " + jobs.size() + " jobs");
+        if (jobs.isEmpty()) {
+            return;
         }
+
+        for (Job job : jobs) {
+            process(job);
+        }
+    }
+
+    private void process(Job job) {
+        executionService.execute(job);
     }
 }
