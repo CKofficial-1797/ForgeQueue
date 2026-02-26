@@ -1,24 +1,18 @@
 package com.forgequeue.core.repository;
 
 import com.forgequeue.core.domain.Job;
-import com.forgequeue.core.domain.JobStatus;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
-import jakarta.persistence.LockModeType;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-import java.util.Optional;
-
-Optional<Job> findByUserIdAndIdempotencyKey(String userId, String idempotencyKey);
-
-@Repository
 public interface JobRepository extends JpaRepository<Job, UUID> {
 
-    boolean existsByUserIdAndIdempotencyKey(String userId, String idempotencyKey);
+    Optional<Job> findByUserIdAndIdempotencyKey(String userId, String idempotencyKey);
 
     @Query(value = """
         SELECT *

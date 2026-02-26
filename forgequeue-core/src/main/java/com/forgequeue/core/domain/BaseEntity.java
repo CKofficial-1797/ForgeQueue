@@ -27,4 +27,18 @@ public abstract class BaseEntity {
     protected void onUpdate() {
         this.updatedAt = Instant.now();
     }
+
+    
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
 }

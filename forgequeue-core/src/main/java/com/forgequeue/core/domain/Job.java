@@ -93,5 +93,60 @@ public class Job extends BaseEntity {
         this.id = UUID.randomUUID();
     }
 
-    // Getters and setters omitted for now (will generate properly in next step if needed)
+    // -------- Getters and Setters --------
+
+public UUID getId() { return id; }
+
+public String getUserId() { return userId; }
+public void setUserId(String userId) { this.userId = userId; }
+
+public String getIdempotencyKey() { return idempotencyKey; }
+public void setIdempotencyKey(String idempotencyKey) { this.idempotencyKey = idempotencyKey; }
+
+public String getType() { return type; }
+public void setType(String type) { this.type = type; }
+
+public JobStatus getStatus() { return status; }
+public void setStatus(JobStatus status) { this.status = status; }
+
+public Integer getPriority() { return priority; }
+public void setPriority(Integer priority) { this.priority = priority; }
+
+public String getPayload() { return payload; }
+public void setPayload(String payload) { this.payload = payload; }
+
+public String getHeaders() { return headers; }
+public void setHeaders(String headers) { this.headers = headers; }
+
+public String getWorkerId() { return workerId; }
+public void setWorkerId(String workerId) { this.workerId = workerId; }
+
+public Instant getLeaseExpiresAt() { return leaseExpiresAt; }
+public void setLeaseExpiresAt(Instant leaseExpiresAt) { this.leaseExpiresAt = leaseExpiresAt; }
+
+public Integer getAttemptCount() { return attemptCount; }
+public void setAttemptCount(Integer attemptCount) { this.attemptCount = attemptCount; }
+
+public Integer getMaxAttempts() { return maxAttempts; }
+public void setMaxAttempts(Integer maxAttempts) { this.maxAttempts = maxAttempts; }
+
+public Instant getNextRunAt() { return nextRunAt; }
+public void setNextRunAt(Instant nextRunAt) { this.nextRunAt = nextRunAt; }
+
+public String getResultPayload() { return resultPayload; }
+public void setResultPayload(String resultPayload) { this.resultPayload = resultPayload; }
+
+public String getLastErrorMessage() { return lastErrorMessage; }
+public void setLastErrorMessage(String lastErrorMessage) { this.lastErrorMessage = lastErrorMessage; }
+
+public String getLastErrorStacktrace() { return lastErrorStacktrace; }
+public void setLastErrorStacktrace(String lastErrorStacktrace) { this.lastErrorStacktrace = lastErrorStacktrace; }
+
+public Instant getFailedAt() { return failedAt; }
+public void setFailedAt(Instant failedAt) { this.failedAt = failedAt; }
+
+public Instant getCompletedAt() { return completedAt; }
+public void setCompletedAt(Instant completedAt) { this.completedAt = completedAt; }
+   
+
 }
