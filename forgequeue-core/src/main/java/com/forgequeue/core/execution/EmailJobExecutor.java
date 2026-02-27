@@ -16,6 +16,8 @@ public class EmailJobExecutor implements JobExecutor {
 
     @Override
 public Map<String, Object> execute(Job job) throws Exception {
+    // System.out.println("Payload = " + job.getPayload());
+    // Thread.sleep(5000);
 
     if (job.getPayload() == null) {
         throw new IllegalArgumentException("Email payload cannot be null");
