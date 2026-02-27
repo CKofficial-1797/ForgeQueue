@@ -1,4 +1,4 @@
-package main.java.com.forgequeue.gateway;
+package com.forgequeue.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
