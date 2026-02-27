@@ -1,12 +1,14 @@
 package com.forgequeue.core.dto;
 
+import java.util.Map;
+
 public class JobSubmitRequest {
 
     private String userId;
     private String idempotencyKey;
     private String type;
     private Integer priority;
-    private String payload;
+    private Map<String, Object> payload;
 
     public String getUserId() {
         return userId;
@@ -24,7 +26,7 @@ public class JobSubmitRequest {
         return priority;
     }
 
-    public String getPayload() {
+    public Map<String, Object> getPayload() {
         return payload;
     }
 
@@ -44,7 +46,7 @@ public class JobSubmitRequest {
         this.priority = priority;
     }
 
-    public void setPayload(String payload) {
+    public void setPayload(Map<String, Object> payload) {
         this.payload = payload;
     }
 }

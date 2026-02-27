@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Map;
 
 @Service
 public class JobSubmissionService {
@@ -24,7 +25,7 @@ public class JobSubmissionService {
                         String idempotencyKey,
                         String type,
                         Integer priority,
-                        String payload) {
+                        Map<String, Object> payload) {
 
         Optional<Job> existing =
                 jobRepository.findByUserIdAndIdempotencyKey(userId, idempotencyKey);

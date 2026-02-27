@@ -5,6 +5,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.UUID;
 
 @Entity
@@ -35,7 +36,7 @@ public class Job extends BaseEntity {
     @Column(name = "idempotency_key")
     private String idempotencyKey;
 
-    @Column(name = "type", nullable = false)
+    @Column(nullable = false)
     private String type;
 
     @Enumerated(EnumType.STRING)
@@ -45,13 +46,21 @@ public class Job extends BaseEntity {
     @Column(nullable = false)
     private Integer priority;
 
+    // -------- JSONB FIELDS --------
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb", nullable = false)
-    private String payload;
+    private Map<String, Object> payload;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "headers", columnDefinition = "jsonb")
-    private String headers;
+    private Map<String, Object> headers;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "result_payload", columnDefinition = "jsonb")
+    private Map<String, Object> resultPayload;
+
+    // -------- Worker & Retry --------
 
     @Column(name = "worker_id")
     private String workerId;
@@ -68,9 +77,7 @@ public class Job extends BaseEntity {
     @Column(name = "next_run_at", nullable = false)
     private Instant nextRunAt;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "result_payload", columnDefinition = "jsonb")
-    private String resultPayload;
+    // -------- Failure / Completion --------
 
     @Column(name = "last_error_message", length = 1000)
     private String lastErrorMessage;
@@ -85,7 +92,7 @@ public class Job extends BaseEntity {
     private Instant completedAt;
 
     public Job() {
-        // for JPA
+        // Required by JPA
     }
 
     @PrePersist
@@ -93,60 +100,58 @@ public class Job extends BaseEntity {
         this.id = UUID.randomUUID();
     }
 
-    // -------- Getters and Setters --------
+    // -------- Getters & Setters --------
 
-public UUID getId() { return id; }
+    public UUID getId() { return id; }
 
-public String getUserId() { return userId; }
-public void setUserId(String userId) { this.userId = userId; }
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 
-public String getIdempotencyKey() { return idempotencyKey; }
-public void setIdempotencyKey(String idempotencyKey) { this.idempotencyKey = idempotencyKey; }
+    public String getIdempotencyKey() { return idempotencyKey; }
+    public void setIdempotencyKey(String idempotencyKey) { this.idempotencyKey = idempotencyKey; }
 
-public String getType() { return type; }
-public void setType(String type) { this.type = type; }
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
 
-public JobStatus getStatus() { return status; }
-public void setStatus(JobStatus status) { this.status = status; }
+    public JobStatus getStatus() { return status; }
+    public void setStatus(JobStatus status) { this.status = status; }
 
-public Integer getPriority() { return priority; }
-public void setPriority(Integer priority) { this.priority = priority; }
+    public Integer getPriority() { return priority; }
+    public void setPriority(Integer priority) { this.priority = priority; }
 
-public String getPayload() { return payload; }
-public void setPayload(String payload) { this.payload = payload; }
+    public Map<String, Object> getPayload() { return payload; }
+    public void setPayload(Map<String, Object> payload) { this.payload = payload; }
 
-public String getHeaders() { return headers; }
-public void setHeaders(String headers) { this.headers = headers; }
+    public Map<String, Object> getHeaders() { return headers; }
+    public void setHeaders(Map<String, Object> headers) { this.headers = headers; }
 
-public String getWorkerId() { return workerId; }
-public void setWorkerId(String workerId) { this.workerId = workerId; }
+    public Map<String, Object> getResultPayload() { return resultPayload; }
+    public void setResultPayload(Map<String, Object> resultPayload) { this.resultPayload = resultPayload; }
 
-public Instant getLeaseExpiresAt() { return leaseExpiresAt; }
-public void setLeaseExpiresAt(Instant leaseExpiresAt) { this.leaseExpiresAt = leaseExpiresAt; }
+    public String getWorkerId() { return workerId; }
+    public void setWorkerId(String workerId) { this.workerId = workerId; }
 
-public Integer getAttemptCount() { return attemptCount; }
-public void setAttemptCount(Integer attemptCount) { this.attemptCount = attemptCount; }
+    public Instant getLeaseExpiresAt() { return leaseExpiresAt; }
+    public void setLeaseExpiresAt(Instant leaseExpiresAt) { this.leaseExpiresAt = leaseExpiresAt; }
 
-public Integer getMaxAttempts() { return maxAttempts; }
-public void setMaxAttempts(Integer maxAttempts) { this.maxAttempts = maxAttempts; }
+    public Integer getAttemptCount() { return attemptCount; }
+    public void setAttemptCount(Integer attemptCount) { this.attemptCount = attemptCount; }
 
-public Instant getNextRunAt() { return nextRunAt; }
-public void setNextRunAt(Instant nextRunAt) { this.nextRunAt = nextRunAt; }
+    public Integer getMaxAttempts() { return maxAttempts; }
+    public void setMaxAttempts(Integer maxAttempts) { this.maxAttempts = maxAttempts; }
 
-public String getResultPayload() { return resultPayload; }
-public void setResultPayload(String resultPayload) { this.resultPayload = resultPayload; }
+    public Instant getNextRunAt() { return nextRunAt; }
+    public void setNextRunAt(Instant nextRunAt) { this.nextRunAt = nextRunAt; }
 
-public String getLastErrorMessage() { return lastErrorMessage; }
-public void setLastErrorMessage(String lastErrorMessage) { this.lastErrorMessage = lastErrorMessage; }
+    public String getLastErrorMessage() { return lastErrorMessage; }
+    public void setLastErrorMessage(String lastErrorMessage) { this.lastErrorMessage = lastErrorMessage; }
 
-public String getLastErrorStacktrace() { return lastErrorStacktrace; }
-public void setLastErrorStacktrace(String lastErrorStacktrace) { this.lastErrorStacktrace = lastErrorStacktrace; }
+    public String getLastErrorStacktrace() { return lastErrorStacktrace; }
+    public void setLastErrorStacktrace(String lastErrorStacktrace) { this.lastErrorStacktrace = lastErrorStacktrace; }
 
-public Instant getFailedAt() { return failedAt; }
-public void setFailedAt(Instant failedAt) { this.failedAt = failedAt; }
+    public Instant getFailedAt() { return failedAt; }
+    public void setFailedAt(Instant failedAt) { this.failedAt = failedAt; }
 
-public Instant getCompletedAt() { return completedAt; }
-public void setCompletedAt(Instant completedAt) { this.completedAt = completedAt; }
-   
-
+    public Instant getCompletedAt() { return completedAt; }
+    public void setCompletedAt(Instant completedAt) { this.completedAt = completedAt; }
 }
