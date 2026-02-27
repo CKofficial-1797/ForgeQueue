@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.Instant;
+import java.util.Map;
 
 @Service
 public class JobExecutionService {
@@ -36,7 +37,7 @@ public class JobExecutionService {
                 throw new IllegalStateException("No executor found for type: " + job.getType());
             }
 
-            String result = executor.execute(job);
+            Map<String, Object> result = executor.execute(job);
 
             markCompleted(job, result);
 
@@ -47,7 +48,7 @@ public class JobExecutionService {
     }
 
     @Transactional
-    protected void markCompleted(Job job, String resultPayload) {
+    protected void markCompleted(Job job, Map<String, Object> resultPayload) {
 
         job.setStatus(JobStatus.COMPLETED);
         job.setCompletedAt(Instant.now());

@@ -3,12 +3,11 @@ package com.forgequeue.core.execution;
 import com.forgequeue.core.domain.Job;
 import org.springframework.stereotype.Component;
 
-import java.util.Random;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class EmailJobExecutor implements JobExecutor {
-
-    private final Random random = new Random();
 
     @Override
     public String getType() {
@@ -16,14 +15,16 @@ public class EmailJobExecutor implements JobExecutor {
     }
 
     @Override
-    public String execute(Job job) throws Exception {
+public Map<String, Object> execute(Job job) throws Exception {
 
-        Thread.sleep(500);
-
-        if (random.nextInt(10) < 3) {
-            throw new RuntimeException("Simulated email sending failure");
-        }
-
-        return "{\"status\":\"SENT\",\"jobId\":\"" + job.getId() + "\"}";
+    if (job.getPayload() == null) {
+        throw new IllegalArgumentException("Email payload cannot be null");
     }
+
+    Map<String, Object> result = new HashMap<>();
+    result.put("status", "sent");
+    result.put("timestamp", System.currentTimeMillis());
+
+    return result;
+}
 }
