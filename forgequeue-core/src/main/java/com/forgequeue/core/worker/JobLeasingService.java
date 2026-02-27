@@ -42,7 +42,7 @@ public class JobLeasingService {
             job.setLeaseExpiresAt(leaseExpiry);
             job.setAttemptCount(job.getAttemptCount() + 1);
         }
-
+        jobRepository.saveAll(jobs); 
         return jobs;
     }
 }

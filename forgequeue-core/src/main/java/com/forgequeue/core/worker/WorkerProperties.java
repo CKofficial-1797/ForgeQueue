@@ -16,6 +16,9 @@ public class WorkerProperties {
     private long retryMaxDelaySeconds;
     private double retryJitterFactor;
 
+    private int maxConcurrentJobsPerUser;
+    private int concurrentCounterTtlSeconds;
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -70,5 +73,20 @@ public class WorkerProperties {
 
     public void setRetryJitterFactor(double retryJitterFactor) {
         this.retryJitterFactor = retryJitterFactor;
+    }
+    public int getMaxConcurrentJobsPerUser() {
+    return maxConcurrentJobsPerUser;
+}
+
+    public void setMaxConcurrentJobsPerUser(int maxConcurrentJobsPerUser) {
+        this.maxConcurrentJobsPerUser = maxConcurrentJobsPerUser;
+    }
+
+    public int getConcurrentCounterTtlSeconds() {
+        return concurrentCounterTtlSeconds;
+    }
+
+    public void setConcurrentCounterTtlSeconds(int concurrentCounterTtlSeconds) {
+        this.concurrentCounterTtlSeconds = concurrentCounterTtlSeconds;
     }
 }
