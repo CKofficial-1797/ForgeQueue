@@ -5,6 +5,8 @@ import com.forgequeue.core.domain.JobStatus;
 import com.forgequeue.core.execution.JobExecutor;
 import com.forgequeue.core.execution.JobExecutorRegistry;
 import com.forgequeue.core.repository.JobRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.transaction.Transactional;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -35,14 +37,8 @@ public class JobExecutionService {
 
     public void execute(Job job) {
 
-    //     // TEMP DEBUG — will be remove after verification
-    // System.out.println("Max concurrent per user = "
-    //         + properties.getMaxConcurrentJobsPerUser());
-
-    
-
         String key = "active_jobs:" + job.getUserId();
-        
+
         Long count = redisTemplate.opsForValue().increment(key);
 
         if (count != null && count == 1) {
@@ -53,7 +49,7 @@ public class JobExecutionService {
             );
         }
 
-        // If user exceeds allowed concurrent jobs → rollback and skip
+        // Enforce per-user concurrency limit
         if (count != null &&
             count > properties.getMaxConcurrentJobsPerUser()) {
 
@@ -70,22 +66,11 @@ public class JobExecutionService {
                         "No executor found for type: " + job.getType());
             }
 
-        //     System.out.println(
-        // "START job=" + job.getId() +
-        // " user=" + job.getUserId() +
-        // " time=" + Instant.now()
-        //     );
-
-
-            Map<String, Object> result = executor.execute(job);
+            //  Protected call
+            Map<String, Object> result =
+                    executeWithResilience(executor, job);
 
             markCompleted(job, result);
-
-        //     System.out.println(
-        // "END job=" + job.getId() +
-        // " user=" + job.getUserId() +
-        // " time=" + Instant.now()
-        // );
 
         } catch (Exception ex) {
 
@@ -95,15 +80,28 @@ public class JobExecutionService {
 
             Long after = redisTemplate.opsForValue().decrement(key);
 
-            // Prevent negative counter values
             if (after != null && after <= 0) {
                 redisTemplate.delete(key);
             }
         }
     }
 
+    /**
+     * Only the external execution is protected by Resilience4j.
+     * Redis logic and failure scheduling must NOT be retried.
+     */
+    @CircuitBreaker(name = "jobExecution")
+    @Retry(name = "jobExecution")
+    protected Map<String, Object> executeWithResilience(
+            JobExecutor executor,
+            Job job) throws Exception {
+
+        return executor.execute(job);
+    }
+
     @Transactional
-    protected void markCompleted(Job job, Map<String, Object> resultPayload) {
+    protected void markCompleted(Job job,
+                                 Map<String, Object> resultPayload) {
 
         job.setStatus(JobStatus.COMPLETED);
         job.setCompletedAt(Instant.now());
@@ -141,7 +139,6 @@ public class JobExecutionService {
         double jitterFactor = properties.getRetryJitterFactor();
 
         long rawDelay = base * (1L << (job.getAttemptCount() - 1));
-
         long cappedDelay = Math.min(rawDelay, maxDelay);
 
         long jitterRange = (long) (cappedDelay * jitterFactor);
