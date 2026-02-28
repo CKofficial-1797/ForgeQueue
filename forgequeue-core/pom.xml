@@ -60,6 +60,19 @@
             <version>2.5.0</version>
         </dependency>
 
+        <!-- TestContainers dependencies for PostgreSQL and Redis: -->
+                <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
