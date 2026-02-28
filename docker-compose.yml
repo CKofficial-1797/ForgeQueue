@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: forgequeue-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: forgequeue
+      POSTGRES_USER: forge
+      POSTGRES_PASSWORD: forgepass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U forge -d forgequeue"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: forgequeue-redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  core:
+    build:
+      context: .
+      dockerfile: forgequeue-core/Dockerfile
+    container_name: forgequeue-core
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/forgequeue
+      SPRING_DATASOURCE_USERNAME: forge
+      SPRING_DATASOURCE_PASSWORD: forgepass
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    ports:
+      - "8080:8080"
+
+  gateway:
+    build:
+      context: .
+      dockerfile: forgequeue-gateway/Dockerfile
+    container_name: forgequeue-gateway
+    restart: unless-stopped
+    depends_on:
+      - core
+      - redis
+    environment:
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    ports:
+      - "8081:8081"
+
+volumes:
+  pgdata:
