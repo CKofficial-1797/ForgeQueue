@@ -193,8 +193,8 @@ On merge to `main` branch: - Logs into Docker Hub via GitHub Secrets -
 Builds production images - Tags images as `latest` - Pushes images
 automatically to Docker Hub
 
-docker.io/`<username>`{=html}/forgequeue-core:latest\
-docker.io/`<username>`{=html}/forgequeue-gateway:latest
+ - docker.io/`<username>`{=html}/forgequeue-core:latest\
+ - docker.io/`<username>`{=html}/forgequeue-gateway:latest
 ------------------------------------------------------------------------
 
 #  Distributed Guarantees
@@ -248,3 +248,4 @@ distributed system.
 
 Built for learning, system design mastery, and real-world backend
 engineering.
+
