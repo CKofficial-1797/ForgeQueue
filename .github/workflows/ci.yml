@@ -28,7 +28,7 @@ jobs:
         run: mvn clean verify
 
       - name: Build Core Docker Image
-        run: docker build -t forgequeue-core ./forgequeue-core
+        run: docker build -f forgequeue-core/Dockerfile -t forgequeue-core .
 
       - name: Build Gateway Docker Image
-        run: docker build -t forgequeue-gateway ./forgequeue-gateway
+        run: docker build -f forgequeue-gateway/Dockerfile -t forgequeue-gateway .
