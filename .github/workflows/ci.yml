@@ -1,0 +1,39 @@
+name: ForgeQueue CI
+
+on:
+  push:
+    branches:
+      - main
+      - feature/**
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:24.0.5-dind
+        options: --privileged
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: Build and Run Tests
+        run: mvn clean verify
+
+      - name: Build Core Docker Image
+        run: docker build -t forgequeue-core ./forgequeue-core
+
+      - name: Build Gateway Docker Image
+        run: docker build -t forgequeue-gateway ./forgequeue-gateway
