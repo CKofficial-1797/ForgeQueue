@@ -1,13 +1,12 @@
 # ForgeQueue 
 
-### Distributed Job Processing Platform (Horizontally Scalable)
+### Distributed Job Processing Platform (Horizontally Scalable by Design)
 
-ForgeQueue is a production-grade distributed job processing platform
-designed to demonstrate real-world backend architecture, fault
-tolerance, and distributed coordination.
+ForgeQueue is a distributed job processing system that allows users to submit long-running tasks—such as report generation, file processing, or data analysis—without waiting for immediate results. When a task is submitted, the system returns a job ID and processes it asynchronously in the background.
 
-It is built with a focus on correctness, scalability, and operational
-reliability --- not just feature completeness.
+Users can query job status at any time (pending, processing, completed, or failed). The system includes automatic retry with backoff for transient failures, dead-letter handling for persistent failures, rate limiting to prevent abuse, and idempotent submission to avoid duplicate processing.
+
+ForgeQueue provides reliable, trackable, and horizontally scalable background execution through safe multi-worker coordination.
 
 ------------------------------------------------------------------------
 
@@ -143,6 +142,34 @@ Validated via:
 -   Crash recovery tests
 -   Idempotency race tests
 -   Executed automatically in CI
+## 7️⃣ Observability & Execution Insights
+
+On success:
+
+- Stores result_payload
+
+- Stores completed_at
+
+On failure:
+
+- Stores last_error_message
+
+- Stores last_error_stacktrace
+
+- Stores failed_at on dead-letter transition
+
+Provides traceable execution history and failure diagnostics.
+## 8️⃣ Performance & Polling Optimization
+
+- Indexed polling on (status, next_run_at, priority)
+
+- Indexed lease expiry lookup
+
+- Short polling interval with bounded batch size
+
+- Optimized for high-concurrency worker coordination
+
+Reduces lock contention and prevents sequential scan degradation.
 
 ------------------------------------------------------------------------
 
@@ -231,7 +258,85 @@ Core:
 Gateway (Public API + Swagger):
 
     http://localhost:8081/swagger-ui.html
+------------------------------------------------------------------------
 
+## 🚧 Future Improvements 
+
+## 1️⃣ Tier-Based Priority Scheduling
+
+- Introduce paid vs free user tiers
+- Dynamic priority weighting during leasing
+- Aging strategy to prevent starvation
+
+Allows premium users to receive faster execution while preserving fairness.
+
+------------------------------------------------------------------------
+
+## 2️⃣ Job Completion Notifications
+
+- Email or webhook callback on job completion/failure
+- Optional callback URL at submission time
+- Retryable notification delivery with backoff
+
+Improves user experience without requiring continuous polling.
+
+------------------------------------------------------------------------
+
+## 3️⃣ Audit Logging
+
+- Append-only audit log for all job state transitions
+- Track worker assignment, retries, failures
+- Store timestamped activity history per job
+
+Enables traceability, debugging, and compliance support.
+
+------------------------------------------------------------------------
+
+## 4️⃣ Metrics & Monitoring
+
+- Expose system metrics (throughput, retry rate, dead-letter rate)
+- Integrate with monitoring stack (e.g., Prometheus/Grafana)
+- Alerting on abnormal failure spikes
+
+Improves operational visibility in production environments.
+
+------------------------------------------------------------------------
+
+## 5️⃣ Adaptive Polling
+
+- Dynamically adjust polling frequency based on queue size
+- Reduce database load during idle periods
+- Increase responsiveness during traffic spikes
+
+Optimizes resource utilization under varying workloads.
+
+------------------------------------------------------------------------
+
+## 6️⃣ Queue Partitioning / Sharding
+
+- Partition jobs by tenant or hash key
+- Reduce global index contention
+- Improve scalability beyond single-database limits
+
+Necessary for very high-scale deployments.
+
+------------------------------------------------------------------------
+
+## 7️⃣ Worker Heartbeat for Long-Running Jobs
+
+- Periodic lease extension during long execution
+- Prevent unnecessary job re-leasing
+
+Supports batch processing and ML workloads.
+
+------------------------------------------------------------------------
+
+## 8️⃣ Exactly-Once Execution Enhancements
+
+- Transactional outbox pattern
+- Stronger downstream idempotency guarantees
+
+Improves correctness for financial or critical operations.
 
 ------------------------------------------------------------------------
 
@@ -248,4 +353,5 @@ distributed system.
 
 Built for learning, system design mastery, and real-world backend
 engineering.
+
 
