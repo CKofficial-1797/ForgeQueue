@@ -238,43 +238,7 @@ ForgeQueue provides:
 -   Execution-layer resilience
 
 ------------------------------------------------------------------------
-## Load Testing & Performance Validation
 
-Local load testing was conducted using **Apache JMeter** to validate system stability, rate limiting behavior, and connection management under controlled traffic.
-
-### Test Setup
-
-- Tool: Apache JMeter 
-- Threads: 50 (reduced to 15 for controlled and stable execution)
-- Target Throughput: ~200 requests per second (Constant Throughput Timer)
-- Endpoint Tested: `POST /api/jobs`
-- Environment: Local Docker setup (Postgres, Redis, Core, Gateway)
-- Metrics Observed:
-  - Spring Boot Actuator
-  - HikariCP connection pool metrics
-  - Redis activity
-  - Error rates and response time percentiles
-
----
-
-### Observations
-
-- System remained stable under sustained ~200 RPS.
-- Rate limiting behavior (HTTP 429) was validated under burst traffic.
-- No server crashes, deadlocks, or application-level failures observed.
-- HikariCP connection pool remained within configured limits.
-- Redis-based concurrency control and retry mechanisms behaved as expected.
-- Response time percentiles (P95/P99) remained within acceptable bounds during controlled runs.
-
----
-
-### Environment Limitation
-
-Higher RPS testing was constrained by client-side operating system limits (ephemeral TCP port exhaustion) on a single Windows machine used as the load generator.
-
-This limitation affected the load generation tool rather than the backend system itself.
-
-For production-grade benchmarking and higher throughput validation, a distributed load testing setup (e.g., multiple JMeter agents or cloud-based tools such as k6) would be used to eliminate client-side bottlenecks and simulate realistic production traffic patterns.
 
 ------------------------------------------------------------------------
 
@@ -380,6 +344,43 @@ Supports batch processing and ML workloads.
 Improves correctness for financial or critical operations.
 
 ------------------------------------------------------------------------
+## Load Testing & Performance Validation
+
+Local load testing was conducted using **Apache JMeter** to validate system stability, rate limiting behavior, and connection management under controlled traffic.
+
+### Test Setup
+
+- Tool: Apache JMeter 
+- Threads: 50 (reduced to 15 for controlled and stable execution)
+- Target Throughput: ~200 requests per second (Constant Throughput Timer)
+- Endpoint Tested: `POST /api/jobs`
+- Environment: Local Docker setup (Postgres, Redis, Core, Gateway)
+- Metrics Observed:
+  - Spring Boot Actuator
+  - HikariCP connection pool metrics
+  - Redis activity
+  - Error rates and response time percentiles
+
+---
+
+### Observations
+
+- System remained stable under sustained ~200 RPS.
+- Rate limiting behavior (HTTP 429) was validated under burst traffic.
+- No server crashes, deadlocks, or application-level failures observed.
+- HikariCP connection pool remained within configured limits.
+- Redis-based concurrency control and retry mechanisms behaved as expected.
+- Response time percentiles (P95/P99) remained within acceptable bounds during controlled runs.
+
+---
+
+### Environment Limitation
+
+Higher RPS testing was constrained by client-side operating system limits (ephemeral TCP port exhaustion) on a single Windows machine used as the load generator.
+
+This limitation affected the load generation tool rather than the backend system itself.
+
+For production-grade benchmarking and higher throughput validation, a distributed load testing setup (e.g., multiple JMeter agents or cloud-based tools such as k6) would be used to eliminate client-side bottlenecks and simulate realistic production traffic patterns.
 
 #  Conclusion
 
