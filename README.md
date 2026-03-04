@@ -9,6 +9,11 @@ Users can query job status at any time (pending, processing, completed, or faile
 ForgeQueue provides reliable, trackable, and horizontally scalable background execution through safe multi-worker coordination.
 
 ------------------------------------------------------------------------
+#  Architecture Overview
+<img width="1330" height="845" alt="image" src="https://github.com/user-attachments/assets/252cc83f-2599-495a-8c01-de15a363e199" />
+
+
+------------------------------------------------------------------------
 
 ##  Tech Stack
 
@@ -44,16 +49,9 @@ ForgeQueue provides reliable, trackable, and horizontally scalable background ex
 
 ------------------------------------------------------------------------
 
-#  Architecture Overview
 
-    Client
-       ↓
-    Spring Cloud Gateway (Rate Limiting + Routing)
-       ↓
-    ForgeQueue Core (Job Engine + Worker Execution)
-       ↓
-    PostgreSQL (Leasing + State)
-    Redis (Concurrency + Fairness)
+
+  
 
 ### Key Design Principles
 
