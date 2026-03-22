@@ -262,6 +262,13 @@ Gateway (Public API + Swagger):
 
     http://localhost:8081/swagger-ui.html
 ------------------------------------------------------------------------
+# Inspiration
+
+This project was inspired by observing submission queues on competitive programming platforms like Codeforces during high-traffic contests.
+
+Submissions often remain in an “in queue” state before evaluation, introducing uncertainty due to delayed feedback. This exposed real-world challenges such as queue backlogs, fairness, and processing latency under load.
+
+That experience led to exploring how distributed systems handle asynchronous workloads, fault tolerance, and concurrency — ultimately resulting in the design of ForgeQueue.
 
 
 
