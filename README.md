@@ -263,83 +263,16 @@ Gateway (Public API + Swagger):
 
 
 
-##  Future Improvements 
+## Future Improvements
 
-## 1️⃣ Tier-Based Priority Scheduling
-
-- Introduce paid vs free user tiers
-- Dynamic priority weighting during leasing
-- Aging strategy to prevent starvation
-
-Allows premium users to receive faster execution while preserving fairness.
-
-------------------------------------------------------------------------
-
-## 2️⃣ Job Completion Notifications
-
-- Email or webhook callback on job completion/failure
-- Optional callback URL at submission time
-- Retryable notification delivery with backoff
-
-Improves user experience without requiring continuous polling.
-
-------------------------------------------------------------------------
-
-## 3️⃣ Audit Logging
-
-- Append-only audit log for all job state transitions
-- Track worker assignment, retries, failures
-- Store timestamped activity history per job
-
-Enables traceability, debugging, and compliance support.
-
-------------------------------------------------------------------------
-
-## 4️⃣ Metrics & Monitoring
-
-- Expose system metrics (throughput, retry rate, dead-letter rate)
-- Integrate with monitoring stack (e.g., Prometheus/Grafana)
-- Alerting on abnormal failure spikes
-
-Improves operational visibility in production environments.
-
-------------------------------------------------------------------------
-
-## 5️⃣ Adaptive Polling
-
-- Dynamically adjust polling frequency based on queue size
-- Reduce database load during idle periods
-- Increase responsiveness during traffic spikes
-
-Optimizes resource utilization under varying workloads.
-
-------------------------------------------------------------------------
-
-## 6️⃣ Queue Partitioning / Sharding
-
-- Partition jobs by tenant or hash key
-- Reduce global index contention
-- Improve scalability beyond single-database limits
-
-Necessary for very high-scale deployments.
-
-------------------------------------------------------------------------
-
-## 7️⃣ Worker Heartbeat for Long-Running Jobs
-
-- Periodic lease extension during long execution
-- Prevent unnecessary job re-leasing
-
-Supports batch processing and ML workloads.
-
-------------------------------------------------------------------------
-
-## 8️⃣ Exactly-Once Execution Enhancements
-
-- Transactional outbox pattern
-- Stronger downstream idempotency guarantees
-
-Improves correctness for financial or critical operations.
+- **Tier-Based Scheduling** – Priority handling for paid users with fairness control  
+- **Job Notifications** – Email/webhook callbacks with retries  
+- **Audit Logging** – Track job state transitions  
+- **Metrics & Monitoring** – Throughput, failures, alerting (e.g., Prometheus)  
+- **Adaptive Polling** – Adjust polling based on load  
+- **Queue Sharding** – Partition jobs for scalability  
+- **Worker Heartbeat** – Extend leases for long-running jobs  
+- **Exactly-Once Execution** – Idempotency + transactional outbox
 
 ------------------------------------------------------------------------
 ## Load Testing & Performance Validation
