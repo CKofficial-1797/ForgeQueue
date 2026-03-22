@@ -4,7 +4,7 @@
 
 ForgeQueue is a distributed job processing system that allows users to submit long-running tasks—such as report generation, file processing, or data analysis—without waiting for immediate results. When a task is submitted, the system returns a job ID and processes it asynchronously in the background.
 
-Users can query job status at any time (pending, processing, completed, or failed). The system includes automatic retry with backoff for transient failures, dead-letter handling for persistent failures, rate limiting to prevent abuse, and idempotent submission to avoid duplicate processing.
+Users can query job status at any time (QUEUED, PROCESSING, COMPLETED, and DEAD_LETTER). The system includes automatic retry with backoff for transient failures, dead-letter handling for persistent failures, rate limiting to prevent abuse, and idempotent submission to avoid duplicate processing.
 
 ForgeQueue provides reliable, trackable, and horizontally scalable background execution through safe multi-worker coordination.
 
