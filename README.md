@@ -275,34 +275,16 @@ Gateway (Public API + Swagger):
 - **Exactly-Once Execution** – Idempotency + transactional outbox
 
 ------------------------------------------------------------------------
-## Load Testing & Performance Validation
+## Load Testing
 
-Local load testing was conducted using **Apache JMeter** to validate system stability, rate limiting behavior, and connection management under controlled traffic.
+Load testing was performed using Apache JMeter on the `POST /api/jobs` endpoint.
 
-### Test Setup
-- **Tool:** Apache JMeter
-- **Threads:** 50 (reduced to 15 for controlled runs)
-- **Target Throughput:** ~200 requests/sec (Constant Throughput Timer)
-- **Endpoint Tested:** `POST /api/jobs`
-- **Environment:** Local Docker Compose (PostgreSQL, Redis, Core, Gateway)
+- Handled **~200 RPS** consistently in local environment
+- Rate limiting (**HTTP 429**) validated under burst traffic
+- Stable connection pool usage (HikariCP)
+- No crashes or deadlocks observed
 
-### Metrics Observed
-- Spring Boot Actuator metrics
-- HikariCP connection pool usage
-- Redis activity
-- Error rate and response time percentiles
-
-### Observations
-- System remained stable under sustained **~200 RPS**.
-- Rate limiting behavior (**HTTP 429**) validated under burst traffic.
-- No server crashes or deadlocks observed.
-- Connection pool usage remained within configured limits.
-- Retry and concurrency mechanisms behaved as expected.
-
-### Environment Limitation
-Higher RPS testing was constrained by **client-side OS socket limits (ephemeral TCP ports)** on a single Windows machine acting as the load generator.
-
-For production-scale benchmarking, distributed load generators (multiple JMeter nodes or tools like **k6**) would be used to eliminate client-side bottlenecks.
+> Testing was conducted on a single-machine setup. Higher-scale validation requires distributed load generation.
 
 #  Conclusion
 
