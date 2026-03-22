@@ -17,7 +17,7 @@ ForgeQueue provides reliable, trackable, and horizontally scalable background ex
 
 ##  Tech Stack
 
-## Backend
+### Backend
 
 -   Java 17
 -   Spring Boot 3.5
@@ -26,7 +26,7 @@ ForgeQueue provides reliable, trackable, and horizontally scalable background ex
 -   PostgreSQL 15
 -   Redis 7
 
-## Reliability & Resilience
+### Reliability & Resilience
 
 -   Atomic row-level leasing (`SELECT FOR UPDATE SKIP LOCKED`)
 -   30s visibility timeout
@@ -35,7 +35,7 @@ ForgeQueue provides reliable, trackable, and horizontally scalable background ex
 -   Dead-letter handling
 -   Resilience4j (Circuit Breaker + Short-Term Retry)
 
-## Infrastructure & DevOps
+### Infrastructure & DevOps
 
 -   Docker (multi-stage builds)
 -   Docker Compose
@@ -43,7 +43,7 @@ ForgeQueue provides reliable, trackable, and horizontally scalable background ex
 -   Docker Hub (image registry)
 -   Testcontainers (integration testing)
 
-## API Documentation
+### API Documentation
 
 -   OpenAPI (Swagger), aggregated via Gateway
 
@@ -53,31 +53,15 @@ ForgeQueue provides reliable, trackable, and horizontally scalable background ex
 
   
 
-### Key Design Principles
+## Core Features
 
--   Horizontal scalability
--   Strong consistency for job leasing
--   Idempotent submission
--   At-least-once processing semantics
--   Multi-tenant fairness
--   Failure isolation at execution layer
--   Infrastructure validated through integration tests
+### 1️⃣ Asynchronous & Idempotent Job Submission
+- Immediate job acceptance with `jobId` (non-blocking API)
+- Duplicate-safe via composite constraint (`user_id`, `idempotency_key`)
+- Transaction-safe under concurrent submissions
 
-------------------------------------------------------------------------
 
-#  Core Features
-
-## 1️⃣ Idempotent Job Submission
-
--   Composite unique constraint (`user_id`, `idempotency_key`)
--   Transactional deduplication
--   Safe under concurrent submissions
-
-Guarantees duplicate-safe job creation.
-
-------------------------------------------------------------------------
-
-## 2️⃣ Atomic Job Leasing
+### 2️⃣ Atomic Job Leasing
 
 Uses:
 
@@ -90,48 +74,48 @@ SELECT ... FOR UPDATE SKIP LOCKED
 -   30-second visibility timeout
 -   Lease expiration allows crash recovery
 
-------------------------------------------------------------------------
 
-## 3️⃣ Crash Recovery
+
+### 3️⃣ Crash Recovery
 
 If a worker crashes: - Lease expires - Job becomes eligible again -
 `attempt_count` increments - Retry scheduling applied
 
 Validated via integration tests.
 
-------------------------------------------------------------------------
 
-## 4️⃣ Retry Strategy
 
-### Short-Term Retry (Resilience4j)
+### 4️⃣ Retry Strategy
+
+#### Short-Term Retry (Resilience4j)
 
 -   Millisecond-level retries
 -   Circuit breaker protection
 -   Protects downstream systems
 
-### Long-Term Retry (Queue Logic)
+#### Long-Term Retry (Queue Logic)
 
 -   Exponential backoff (5--300 seconds)
 -   ±20% jitter to prevent retry storms
 -   Dead-letter transition after max attempts
 
-------------------------------------------------------------------------
 
-## 5️⃣ Multi-Tenant Fairness
 
-### Gateway-Level Rate Limiting
+### 5️⃣ Multi-Tenant Fairness
+
+#### Gateway-Level Rate Limiting
 
 -   Redis-backed `RedisRateLimiter`
 -   Header-based user identification
 
-### Worker-Level Concurrency Throttling
+#### Worker-Level Concurrency Throttling
 
 -   Redis TTL-based counters
 -   Prevents single user from saturating workers
 
-------------------------------------------------------------------------
 
-## 6️⃣ Distributed Correctness Validation
+
+### 6️⃣ Distributed Correctness Validation
 
 Validated via:
 
@@ -140,7 +124,8 @@ Validated via:
 -   Crash recovery tests
 -   Idempotency race tests
 -   Executed automatically in CI
-## 7️⃣ Observability & Execution Insights
+  
+### 7️⃣ Observability & Execution Insights
 
 On success:
 
@@ -157,7 +142,9 @@ On failure:
 - Stores failed_at on dead-letter transition
 
 Provides traceable execution history and failure diagnostics.
-## 8️⃣ Performance & Polling Optimization
+
+
+### 8️⃣ Performance & Polling Optimization
 
 - Indexed polling on (status, next_run_at, priority)
 
@@ -170,9 +157,9 @@ Provides traceable execution history and failure diagnostics.
 Reduces lock contention and prevents sequential scan degradation.
 
 
-------------------------------------------------------------------------
 
-## 9️⃣Containerization
+
+### 9️⃣Containerization
 
 -   Multi-stage Docker builds
 -   Separate images for Core and Gateway
@@ -181,17 +168,17 @@ Reduces lock contention and prevents sequential scan degradation.
 
 Images are automatically published to Docker Hub on merge to main.
 
-------------------------------------------------------------------------
 
-## 🔟 CI/CD Pipeline
 
-### Continuous Integration (CI)
+### 🔟 CI/CD Pipeline
+
+#### Continuous Integration (CI)
 
 On every push and pull request: - Builds multi-module Maven project -
 Runs integration tests (Testcontainers) - Validates distributed
 behavior - Builds Docker images
 
-### Continuous Delivery (CD)
+#### Continuous Delivery (CD)
 
 On merge to `main` branch: - Logs into Docker Hub via GitHub Secrets -
 Builds production images - Tags images as `latest` - Pushes images
@@ -202,7 +189,7 @@ automatically to Docker Hub
 ------------------------------------------------------------------------
 
 
-#  Project Structure
+##  Project Structure
 
     ForgeQueue/
     │
@@ -224,25 +211,11 @@ automatically to Docker Hub
     
     ------------------------------------------------------------------------
 
-#  Distributed Guarantees
-
-ForgeQueue provides:
-
--   Idempotent job submission
--   Duplicate-safe leasing
--   Crash-safe processing
--   Controlled retries
--   Dead-letter handling
--   Per-user fairness
--   Horizontal scaling support
--   Execution-layer resilience
 
 
 
 
-------------------------------------------------------------------------
-
-#  Running Locally
+##  Running Locally
 
 ### 1️⃣ Build Project
 
@@ -262,7 +235,7 @@ Gateway (Public API + Swagger):
 
     http://localhost:8081/swagger-ui.html
 ------------------------------------------------------------------------
-# Inspiration
+## Inspiration
 
 This project was inspired by observing submission queues on competitive programming platforms like Codeforces during high-traffic contests.
 
@@ -270,6 +243,7 @@ Submissions often remain in an “in queue” state before evaluation, introduci
 
 That experience led to exploring how distributed systems handle asynchronous workloads, fault tolerance, and concurrency — ultimately resulting in the design of ForgeQueue.
 
+------------------------------------------------------------------------
 
 
 ## Future Improvements
@@ -295,7 +269,7 @@ Load testing was performed using Apache JMeter on the `POST /api/jobs` endpoint.
 
 > Testing was conducted on a single-machine setup. Higher-scale validation requires distributed load generation.
 
-#  Conclusion
+##  Conclusion
 
 ForgeQueue is designed as a backend systems showcase --- demonstrating
 distributed coordination, concurrency control, resilience engineering,
