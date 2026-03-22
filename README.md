@@ -301,8 +301,6 @@ ForgeQueue is designed as a backend systems showcase --- demonstrating
 distributed coordination, concurrency control, resilience engineering,
 and production-grade architectural decisions.
 
-It is not just a job queue implementation --- it is a correctness-first
-distributed system.
 
 ------------------------------------------------------------------------
 
