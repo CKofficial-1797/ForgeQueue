@@ -18,11 +18,11 @@ ForgeQueue provides reliable, trackable, and horizontally scalable background ex
 
 ## Inspiration
 
-This project was inspired by observing submission queues on competitive programming platforms like Codeforces during high-traffic contests.
+This project was inspired by observing submission queues on competitive programming platforms like **Codeforces** during high-traffic contests.
 
 Submissions often remain in an “in queue” state before evaluation, highlighting real-world issues such as queue backlogs, fairness, and increased processing latency under load.
 
-This led to a deeper exploration of how distributed systems manage asynchronous workloads, handle concurrency, and maintain fault tolerance — ultimately resulting in the design of ForgeQueue.
+This led to a deeper exploration of how distributed systems manage asynchronous workloads, handle concurrency, and maintain fault tolerance — ultimately resulting in the design of **ForgeQueue**.
 
 ------------------------------------------------------------------------
 
