@@ -15,6 +15,17 @@ ForgeQueue provides reliable, trackable, and horizontally scalable background ex
 
 ------------------------------------------------------------------------
 
+
+## Inspiration
+
+This project was inspired by observing submission queues on competitive programming platforms like Codeforces during high-traffic contests.
+
+Submissions often remain in an “in queue” state before evaluation, introducing uncertainty due to delayed feedback. This exposed real-world challenges such as queue backlogs, fairness, and processing latency under load.
+
+That experience led to exploring how distributed systems handle asynchronous workloads, fault tolerance, and concurrency — ultimately resulting in the design of ForgeQueue.
+
+------------------------------------------------------------------------
+
 ##  Tech Stack
 
 ### Backend
@@ -60,28 +71,19 @@ ForgeQueue provides reliable, trackable, and horizontally scalable background ex
 - Duplicate-safe via composite constraint (`user_id`, `idempotency_key`)
 - Transaction-safe under concurrent submissions
 
+### 2️⃣ Safe Distributed Job Processing
+- Atomic job leasing using:
+  ```sql
+  SELECT ... FOR UPDATE SKIP LOCKED
+- Ensures a job is processed by only one worker
+- Enables safe multi-worker execution without coordination
+- **Horizontally Scalable** -- stateless workers scale independently
+- No central coordinator required & System scales linearly by adding more workers
 
-### 2️⃣ Atomic Job Leasing
-
-Uses:
-
-``` sql
-SELECT ... FOR UPDATE SKIP LOCKED
-```
-
--   Prevents duplicate leasing
--   Safe for multiple worker instances
--   30-second visibility timeout
--   Lease expiration allows crash recovery
-
-
-
-### 3️⃣ Crash Recovery
-
-If a worker crashes: - Lease expires - Job becomes eligible again -
-`attempt_count` increments - Retry scheduling applied
-
-Validated via integration tests.
+### 3️⃣ Visibility Timeout & Crash Recovery
+- Jobs in PROCESSING are leased with expiry (lease_expires_at)
+- If a worker crashes, lease expires and job becomes eligible again
+- Guarantees no job remains permanently stuck
 
 
 
@@ -235,15 +237,7 @@ Gateway (Public API + Swagger):
 
     http://localhost:8081/swagger-ui.html
 ------------------------------------------------------------------------
-## Inspiration
 
-This project was inspired by observing submission queues on competitive programming platforms like Codeforces during high-traffic contests.
-
-Submissions often remain in an “in queue” state before evaluation, introducing uncertainty due to delayed feedback. This exposed real-world challenges such as queue backlogs, fairness, and processing latency under load.
-
-That experience led to exploring how distributed systems handle asynchronous workloads, fault tolerance, and concurrency — ultimately resulting in the design of ForgeQueue.
-
-------------------------------------------------------------------------
 
 
 ## Future Improvements
