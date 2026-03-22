@@ -169,7 +169,38 @@ Provides traceable execution history and failure diagnostics.
 
 Reduces lock contention and prevents sequential scan degradation.
 
+
 ------------------------------------------------------------------------
+
+## 9️⃣Containerization
+
+-   Multi-stage Docker builds
+-   Separate images for Core and Gateway
+-   Docker Compose orchestration
+-   Healthchecks enabled
+
+Images are automatically published to Docker Hub on merge to main.
+
+------------------------------------------------------------------------
+
+## 🔟 CI/CD Pipeline
+
+### Continuous Integration (CI)
+
+On every push and pull request: - Builds multi-module Maven project -
+Runs integration tests (Testcontainers) - Validates distributed
+behavior - Builds Docker images
+
+### Continuous Delivery (CD)
+
+On merge to `main` branch: - Logs into Docker Hub via GitHub Secrets -
+Builds production images - Tags images as `latest` - Pushes images
+automatically to Docker Hub
+
+ - docker.io/`<username>`{=html}/forgequeue-core:latest\
+ - docker.io/`<username>`{=html}/forgequeue-gateway:latest
+------------------------------------------------------------------------
+
 
 #  Project Structure
 
@@ -190,37 +221,8 @@ Reduces lock contention and prevents sequential scan degradation.
     │
     ├── docker-compose.yml
     └── .github/workflows/ci.yml
-
-------------------------------------------------------------------------
-
-#  Containerization
-
--   Multi-stage Docker builds
--   Separate images for Core and Gateway
--   Docker Compose orchestration
--   Healthchecks enabled
-
-Images are automatically published to Docker Hub on merge to main.
-
-------------------------------------------------------------------------
-
-# 🔁 CI/CD Pipeline
-
-## Continuous Integration (CI)
-
-On every push and pull request: - Builds multi-module Maven project -
-Runs integration tests (Testcontainers) - Validates distributed
-behavior - Builds Docker images
-
-## Continuous Delivery (CD)
-
-On merge to `main` branch: - Logs into Docker Hub via GitHub Secrets -
-Builds production images - Tags images as `latest` - Pushes images
-automatically to Docker Hub
-
- - docker.io/`<username>`{=html}/forgequeue-core:latest\
- - docker.io/`<username>`{=html}/forgequeue-gateway:latest
-------------------------------------------------------------------------
+    
+    ------------------------------------------------------------------------
 
 #  Distributed Guarantees
 
@@ -235,7 +237,7 @@ ForgeQueue provides:
 -   Horizontal scaling support
 -   Execution-layer resilience
 
-------------------------------------------------------------------------
+
 
 
 ------------------------------------------------------------------------
