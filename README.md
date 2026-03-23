@@ -273,10 +273,8 @@ Gateway (Public API + Swagger):
 - **Job Notifications** – Email/webhook callbacks with retries  
 - **Audit Logging** – Track job state transitions  
 - **Metrics & Monitoring** – Throughput, failures, alerting (e.g., Prometheus)  
-- **Adaptive Polling** – Adjust polling based on load  
-- **Queue Sharding** – Partition jobs for scalability  
 - **Worker Heartbeat** – Extend leases for long-running jobs  
-- **Exactly-Once Execution** – Idempotency + transactional outbox
+
 
 ------------------------------------------------------------------------
 ## Load Testing
