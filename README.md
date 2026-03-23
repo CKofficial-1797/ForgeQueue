@@ -238,6 +238,33 @@ Gateway (Public API + Swagger):
     http://localhost:8081/swagger-ui.html
 ------------------------------------------------------------------------
 
+### References
+
+- AWS Architecture Blog — Exponential Backoff and Jitter  
+  https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/ 
+
+- AWS Builders Library — Timeouts, Retries and Backoff with Jitter  
+  https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter/ 
+
+- Resilience4j Documentation (Retry & Circuit Breaker)  
+  https://resilience4j.readme.io/docs  
+
+- PostgreSQL Documentation — Row-level locking (`FOR UPDATE SKIP LOCKED`)  
+  https://www.postgresql.org/docs/current/sql-select.html  
+
+- RabbitMQ Documentation — Dead Letter Queues  
+  https://www.rabbitmq.com/dlx.html  
+
+- Spring Framework — Scheduling  
+  https://docs.spring.io/spring-framework/reference/integration/scheduling.html  
+
+- Spring Data JPA Documentation  
+  https://docs.spring.io/spring-data/jpa/docs/current/reference/html/  
+
+- Spring Cloud Gateway — Redis Rate Limiter  
+  https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#redis-rate-limiter  
+
+
 
 
 ## Future Improvements
