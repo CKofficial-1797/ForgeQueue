@@ -107,13 +107,15 @@ This led to a deeper exploration of how distributed systems manage asynchronous 
 
 #### Gateway-Level Rate Limiting
 
--   Redis-backed `RedisRateLimiter`
--   Header-based user identification
+-  Redis-backed RedisRateLimiter (token bucket)
+-  Header based Per-user limiting , fallback to IP
+-  Enforced consistently across instances using Redis
 
 #### Worker-Level Concurrency Throttling
 
--   Redis TTL-based counters
--   Prevents single user from saturating workers
+-  Limits number of active jobs per user
+-  Redis TTL-based counters prevent stale locks on crashes
+-  Ensures no single user can saturate worker capacity
 
 
 
