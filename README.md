@@ -121,15 +121,14 @@ This led to a deeper exploration of how distributed systems manage asynchronous 
 
 ### 6️⃣ Distributed Correctness Validation
 
-System correctness validated under real infrastructure using **Testcontainers**
+System correctness validated under real infrastructure using Testcontainers.
 
 Validated properties:
 
 - Safe concurrent job leasing using SELECT FOR UPDATE SKIP LOCKED  
-- No duplicate execution across multiple worker instances  
+- No duplicate job leasing across concurrent worker instances  
 - Automatic job retry after worker crash (visibility timeout recovery)  
 - Idempotent job submission under concurrent retries  
--  Per-user concurrency limits enforced via Redis counters  
 
 All tests run against real PostgreSQL and Redis containers and execute automatically in CI.
   
