@@ -121,13 +121,17 @@ This led to a deeper exploration of how distributed systems manage asynchronous 
 
 ### 6️⃣ Distributed Correctness Validation
 
-Validated via:
+System correctness validated under real infrastructure using **Testcontainers**
 
--   Testcontainers (PostgreSQL + Redis)
--   Concurrency simulation tests
--   Crash recovery tests
--   Idempotency race tests
--   Executed automatically in CI
+Validated properties:
+
+- Safe concurrent job leasing using SELECT FOR UPDATE SKIP LOCKED  
+- No duplicate execution across multiple worker instances  
+- Automatic job retry after worker crash (visibility timeout recovery)  
+- Idempotent job submission under concurrent retries  
+-  Per-user concurrency limits enforced via Redis counters  
+
+All tests run against real PostgreSQL and Redis containers and execute automatically in CI.
   
 ### 7️⃣ Observability & Execution Insights
 
@@ -264,7 +268,10 @@ Gateway (Public API + Swagger):
   https://docs.spring.io/spring-data/jpa/docs/current/reference/html/  
 
 - Spring Cloud Gateway — Redis Rate Limiter  
-  https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#redis-rate-limiter  
+  https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#redis-rate-limiter
+
+- Testcontainers: Integration testing library for managing containerized dependencies during test.
+      https://java.testcontainers.org/
 
 
 
