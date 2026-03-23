@@ -270,8 +270,9 @@ Gateway (Public API + Swagger):
 - Spring Cloud Gateway — Redis Rate Limiter  
   https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/#redis-rate-limiter
 
-- Testcontainers: Integration testing library for managing containerized dependencies during test.
-      https://java.testcontainers.org/
+- Testcontainers  — Integration testing library for managing containerized dependencies during test.
+  
+   https://java.testcontainers.org/
 
 
 
