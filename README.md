@@ -121,7 +121,7 @@ This led to a deeper exploration of how distributed systems manage asynchronous 
 
 ### 6️⃣ Distributed Correctness Validation
 
-System correctness validated under real infrastructure using Testcontainers.
+System correctness validated under real infrastructure using **Testcontainers**
 
 Validated properties:
 
