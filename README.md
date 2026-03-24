@@ -135,17 +135,12 @@ All tests run against real PostgreSQL and Redis containers and execute automatic
 ### 7️⃣ Observability & Execution Insights
 
 On success:
-
 - Stores result_payload
-
 - Stores completed_at
-
+  
 On failure:
-
 - Stores last_error_message
-
 - Stores last_error_stacktrace
-
 - Stores failed_at on dead-letter transition
 
 Provides traceable execution history and failure diagnostics.
@@ -154,11 +149,8 @@ Provides traceable execution history and failure diagnostics.
 ### 8️⃣ Performance & Polling Optimization
 
 - Indexed polling on (status, next_run_at, priority)
-
 - Indexed lease expiry lookup
-
 - Short polling interval with bounded batch size
-
 - Optimized for high-concurrency worker coordination
 
 Reduces lock contention and prevents sequential scan degradation.
