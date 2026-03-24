@@ -188,30 +188,6 @@ automatically to Docker Hub
 ------------------------------------------------------------------------
 
 
-##  Project Structure
-
-    ForgeQueue/
-    │
-    ├── forgequeue-core/
-    │   ├── controller/
-    │   ├── domain/
-    │   ├── repository/
-    │   ├── service/
-    │   ├── worker/
-    │   ├── execution/
-    │   └── config/
-    │
-    ├── forgequeue-gateway/
-    │   ├── config/
-    │   └── routing/
-    │
-    ├── docker-compose.yml
-    └── .github/workflows/ci.yml
-    
-    ------------------------------------------------------------------------
-
-
-
 
 
 ##  Running Locally
