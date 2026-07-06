@@ -174,6 +174,20 @@ automatically to Docker Hub
 
  - docker.io/`<username>`{=html}/forgequeue-core:latest\
  - docker.io/`<username>`{=html}/forgequeue-gateway:latest
+
+### > Observability & Execution Insights
+
+On success:
+- Stores result_payload
+- Stores completed_at
+  
+On failure:
+- Stores last_error_message
+- Stores last_error_stacktrace
+- Stores failed_at on dead-letter transition
+
+Provides traceable execution history and failure diagnostics
+
 ------------------------------------------------------------------------
 
 
