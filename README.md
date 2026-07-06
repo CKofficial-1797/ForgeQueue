@@ -66,12 +66,12 @@ This led to a deeper exploration of how distributed systems manage asynchronous 
 
 ## Core Features
 
-### 1️⃣ Asynchronous & Idempotent Job Submission
+###  Asynchronous & Idempotent Job Submission
 - Immediate job acceptance with `jobId` (non-blocking API)
 - Duplicate-safe via composite constraint (`user_id`, `idempotency_key`)
 - Transaction-safe under concurrent submissions
 
-### 2️⃣ Safe Distributed Job Processing
+###  Safe Distributed Job Processing
 - Atomic job leasing using:
   ```sql
   SELECT ... FOR UPDATE SKIP LOCKED
@@ -80,14 +80,14 @@ This led to a deeper exploration of how distributed systems manage asynchronous 
 - **Horizontally Scalable** -- stateless workers scale independently
 - No central coordinator required & System scales linearly by adding more workers
 
-### 3️⃣ Visibility Timeout & Crash Recovery
+###  Visibility Timeout & Crash Recovery
 - Jobs in PROCESSING are leased with expiry (lease_expires_at)
 - If a worker crashes, lease expires and job becomes eligible again
 - Guarantees no job remains permanently stuck
 
 
 
-### 4️⃣ Retry Strategy
+###  Retry Strategy
 
 #### Short-Term Retry (Resilience4j)
 
@@ -103,7 +103,7 @@ This led to a deeper exploration of how distributed systems manage asynchronous 
 
 
 
-### 5️⃣ Multi-Tenant Fairness
+###  Multi-Tenant Fairness
 
 #### Gateway-Level Rate Limiting
 
@@ -119,7 +119,7 @@ This led to a deeper exploration of how distributed systems manage asynchronous 
 
 
 
-### 6️⃣ Distributed Correctness Validation
+###  Distributed Correctness Validation
 
 System correctness validated under real infrastructure using **Testcontainers**
 
@@ -132,21 +132,10 @@ Validated properties:
 
 All tests run against real PostgreSQL and Redis containers and execute automatically in CI.
   
-### 7️⃣ Observability & Execution Insights
-
-On success:
-- Stores result_payload
-- Stores completed_at
-  
-On failure:
-- Stores last_error_message
-- Stores last_error_stacktrace
-- Stores failed_at on dead-letter transition
-
-Provides traceable execution history and failure diagnostics.
 
 
-### 8️⃣ Performance & Polling Optimization
+
+###  Performance & Polling Optimization
 
 - Indexed polling on (status, next_run_at, priority)
 - Indexed lease expiry lookup
@@ -158,7 +147,7 @@ Reduces lock contention and prevents sequential scan degradation.
 
 
 
-### 9️⃣Containerization
+### Containerization
 
 -   Multi-stage Docker builds
 -   Separate images for Core and Gateway
@@ -169,7 +158,7 @@ Images are automatically published to Docker Hub on merge to main.
 
 
 
-### 🔟 CI/CD Pipeline
+###  CI/CD Pipeline
 
 #### Continuous Integration (CI)
 
