@@ -243,16 +243,13 @@ Gateway (Public API + Swagger):
 
 
 ------------------------------------------------------------------------
-## Load Testing
+
 
 Performed load testing using Apache JMeter on the POST /api/jobs endpoint to validate system stability under concurrent traffic.
 
 - Simulated approximately 200 requests/sec in a local single-node environment, observing controlled degradation via rate limiting 
 - Rate limiting behavior (HTTP 429) verified under burst traffic scenarios
-- Stable database connection pool utilization observed (HikariCP)
-- No crashes, deadlocks, or job duplication detected during test runs
 
-> Testing conducted on a single-machine setup; distributed load generation and multi-node validation planned for future scaling evaluation.
 
 ##  Conclusion
 
