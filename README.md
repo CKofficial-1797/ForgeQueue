@@ -66,12 +66,12 @@ This led to a deeper exploration of how distributed systems manage asynchronous 
 
 ## Core Features
 
-###  Asynchronous & Idempotent Job Submission
+### > Asynchronous & Idempotent Job Submission
 - Immediate job acceptance with `jobId` (non-blocking API)
 - Duplicate-safe via composite constraint (`user_id`, `idempotency_key`)
 - Transaction-safe under concurrent submissions
 
-###  Safe Distributed Job Processing
+### > Safe Distributed Job Processing
 - Atomic job leasing using:
   ```sql
   SELECT ... FOR UPDATE SKIP LOCKED
@@ -80,22 +80,22 @@ This led to a deeper exploration of how distributed systems manage asynchronous 
 - **Horizontally Scalable** -- stateless workers scale independently
 - No central coordinator required & System scales linearly by adding more workers
 
-###  Visibility Timeout & Crash Recovery
+### > Visibility Timeout & Crash Recovery
 - Jobs in PROCESSING are leased with expiry (lease_expires_at)
 - If a worker crashes, lease expires and job becomes eligible again
 - Guarantees no job remains permanently stuck
 
 
 
-###  Retry Strategy
+### > Retry Strategy
 
-#### Short-Term Retry (Resilience4j)
+#### > Short-Term Retry (Resilience4j)
 
 -   Millisecond-level retries
 -   Circuit breaker protection
 -   Protects downstream systems
 
-#### Long-Term Retry (Queue Logic)
+#### > Long-Term Retry (Queue Logic)
 
 -   Exponential backoff (5--300 seconds)
 -   ±20% jitter to prevent retry storms
@@ -103,15 +103,15 @@ This led to a deeper exploration of how distributed systems manage asynchronous 
 
 
 
-###  Multi-Tenant Fairness
+### > Multi-Tenant Fairness
 
-#### Gateway-Level Rate Limiting
+#### > Gateway-Level Rate Limiting
 
 -  Redis-backed RedisRateLimiter (token bucket)
 -  Header based Per-user limiting , fallback to IP
 -  Enforced consistently across instances using Redis
 
-#### Worker-Level Concurrency Throttling
+#### > Worker-Level Concurrency Throttling
 
 -  Limits number of active jobs per user
 -  Redis TTL-based counters prevent stale locks on crashes
@@ -119,7 +119,7 @@ This led to a deeper exploration of how distributed systems manage asynchronous 
 
 
 
-###  Distributed Correctness Validation
+### > Distributed Correctness Validation
 
 System correctness validated under real infrastructure using **Testcontainers**
 
@@ -135,7 +135,7 @@ All tests run against real PostgreSQL and Redis containers and execute automatic
 
 
 
-###  Performance & Polling Optimization
+### >  Performance & Polling Optimization
 
 - Indexed polling on (status, next_run_at, priority)
 - Indexed lease expiry lookup
@@ -147,7 +147,7 @@ Reduces lock contention and prevents sequential scan degradation.
 
 
 
-### Containerization
+### > Containerization
 
 -   Multi-stage Docker builds
 -   Separate images for Core and Gateway
@@ -158,15 +158,15 @@ Images are automatically published to Docker Hub on merge to main.
 
 
 
-###  CI/CD Pipeline
+### > CI/CD Pipeline
 
-#### Continuous Integration (CI)
+#### > Continuous Integration (CI)
 
 On every push and pull request: - Builds multi-module Maven project -
 Runs integration tests (Testcontainers) - Validates distributed
 behavior - Builds Docker images
 
-#### Continuous Delivery (CD)
+#### > Continuous Delivery (CD)
 
 On merge to `main` branch: - Logs into Docker Hub via GitHub Secrets -
 Builds production images - Tags images as `latest` - Pushes images
