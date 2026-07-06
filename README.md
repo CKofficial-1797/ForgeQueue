@@ -1,6 +1,6 @@
 # ForgeQueue 
 
-### Distributed Job Processing Platform (Horizontally Scalable by Design)
+### Distributed Job Processing Platform 
 
 ForgeQueue is a distributed job processing system that allows users to submit long-running tasks—such as report generation, file processing, or data analysis—without waiting for immediate results. When a task is submitted, the system returns a job ID and processes it asynchronously in the background.
 
