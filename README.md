@@ -13,6 +13,7 @@ ForgeQueue provides reliable, trackable, and horizontally scalable background ex
 <img width="1330" height="845" alt="image" src="https://github.com/user-attachments/assets/252cc83f-2599-495a-8c01-de15a363e199" />
 
 
+> A worker is a running instance of the ForgeQueue Core service. Each instance periodically polls PostgreSQL through Spring's @Scheduled scheduler.
 ------------------------------------------------------------------------
 
 
